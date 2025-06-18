@@ -1,8 +1,8 @@
-def test_update_product(self):
-    """Test updating a product"""
+def test_delete_product(self):
+    """Test deleting a product"""
     product = ProductFactory()
     product.create()
-    product.name = "UpdatedName"
-    product.update()
-    updated = Product.find(product.id)
-    self.assertEqual(updated.name, "UpdatedName")
+    product_id = product.id
+    product.delete()
+    result = Product.find(product_id)
+    self.assertIsNone(result)
