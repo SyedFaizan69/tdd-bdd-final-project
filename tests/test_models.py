@@ -1,7 +1,8 @@
-def test_read_product(self):
-    """Test reading a product from the database"""
+def test_update_product(self):
+    """Test updating a product"""
     product = ProductFactory()
     product.create()
-    found = Product.find(product.id)
-    self.assertIsNotNone(found)
-    self.assertEqual(found.id, product.id)
+    product.name = "UpdatedName"
+    product.update()
+    updated = Product.find(product.id)
+    self.assertEqual(updated.name, "UpdatedName")
