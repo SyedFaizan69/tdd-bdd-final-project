@@ -1,7 +1,7 @@
-def test_find_by_name(self):
-    """Test finding products by name"""
-    product = ProductFactory(name="Wrench")
+def test_find_by_category(self):
+    """Test finding products by category"""
+    product = ProductFactory(category=Category.TOOLS)
     product.create()
-    results = Product.find_by_name("Wrench").all()
+    results = Product.find_by_category(Category.TOOLS).all()
     self.assertGreaterEqual(len(results), 1)
-    self.assertEqual(results[0].name, "Wrench")
+    self.assertEqual(results[0].category, Category.TOOLS)
