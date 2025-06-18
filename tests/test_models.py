@@ -1,8 +1,7 @@
-def test_delete_product(self):
-    """Test deleting a product"""
-    product = ProductFactory()
-    product.create()
-    product_id = product.id
-    product.delete()
-    result = Product.find(product_id)
-    self.assertIsNone(result)
+def test_list_all_products(self):
+    """Test listing all products"""
+    for _ in range(3):
+        product = ProductFactory()
+        product.create()
+    results = Product.all()
+    self.assertEqual(len(results), 3)
