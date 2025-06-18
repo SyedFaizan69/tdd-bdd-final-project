@@ -1,7 +1,7 @@
-def test_find_by_category(self):
-    """Test finding products by category"""
-    product = ProductFactory(category=Category.TOOLS)
+def test_find_by_availability(self):
+    """Test finding products by availability"""
+    product = ProductFactory(available=True)
     product.create()
-    results = Product.find_by_category(Category.TOOLS).all()
+    results = Product.find_by_availability(True).all()
     self.assertGreaterEqual(len(results), 1)
-    self.assertEqual(results[0].category, Category.TOOLS)
+    self.assertTrue(results[0].available)
