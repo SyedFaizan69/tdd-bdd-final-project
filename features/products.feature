@@ -1,40 +1,54 @@
-Feature: The product store service back-end
-    As a Product Store Owner
-    I need a RESTful catalog service
-    So that I can keep track of all my products
+Feature: Product Management
 
-Background:
+  Background:
     Given the following products
-        | name       | description     | price   | available | category   |
-        | Hat        | A red fedora    | 59.95   | True      | CLOTHS     |
-        | Shoes      | Blue shoes      | 120.50  | False     | CLOTHS     |
-        | Big Mac    | 1/4 lb burger   | 5.99    | True      | FOOD       |
-        | Sheets     | Full bed sheets | 87.00   | True      | HOUSEWARES |
+      | name   | description      | price | available | category  |
+      | Wrench | Handy tool       | 19.99 | true      | TOOLS     |
+      | Apple  | Fresh and crisp  | 0.99  | true      | FOOD      |
+      | Drill  | Power tool       | 89.99 | false     | TOOLS     |
 
-Scenario: The server is running
-    When I visit the "Home Page"
-    Then I should see "Product Catalog Administration" in the title
-    And I should not see "404 Not Found"
+  Scenario: Read a product by ID                # Task 6a
+    When I visit "/products/1"
+    Then the response status should be "200"
+    And the response should contain "Wrench"
 
-Scenario: Create a Product
-    When I visit the "Home Page"
-    And I set the "Name" to "Hammer"
-    And I set the "Description" to "Claw hammer"
-    And I select "True" in the "Available" dropdown
-    And I select "Tools" in the "Category" dropdown
-    And I set the "Price" to "34.95"
-    And I press the "Create" button
-    Then I should see the message "Success"
-    When I copy the "Id" field
-    And I press the "Clear" button
-    Then the "Id" field should be empty
-    And the "Name" field should be empty
-    And the "Description" field should be empty
-    When I paste the "Id" field
-    And I press the "Retrieve" button
-    Then I should see the message "Success"
-    And I should see "Hammer" in the "Name" field
-    And I should see "Claw hammer" in the "Description" field
-    And I should see "True" in the "Available" dropdown
-    And I should see "Tools" in the "Category" dropdown
-    And I should see "34.95" in the "Price" field
+  Scenario: Update a product                    # Task 6b
+    When I PUT "/products/1" with:
+      """
+      {
+        "name": "Updated Wrench",
+        "description": "Updated",
+        "price": 20.00,
+        "available": true,
+        "category": "TOOLS"
+      }
+      """
+    Then the response status should be "200"
+    And the response should contain "Updated Wrench"
+
+  Scenario: Delete a product                    # Task 6c
+    When I DELETE "/products/1"
+    Then the response status should be "204"
+
+  Scenario: List all products                   # Task 6d
+    When I visit "/products"
+    Then the response status should be "200"
+    And the response should contain "Apple"
+    And the response should contain "Wrench"
+
+  Scenario: Search by category                  # Task 6e
+    When I visit "/products?category=FOOD"
+    Then the response status should be "200"
+    And the response should contain "Apple"
+    And the response should not contain "Wrench"
+
+  Scenario: Search by availability              # Task 6f
+    When I visit "/products?available=true"
+    Then the response status should be "200"
+    And the response should contain "Apple"
+    And the response should not contain "Drill"
+
+  Scenario: Search by name                      # Task 6g
+    When I visit "/products?name=Drill"
+    Then the response status should be "200"
+    And the response should contain "Drill"
